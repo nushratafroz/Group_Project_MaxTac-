@@ -9,14 +9,45 @@ $gradeId = $_GET['gradeId'];
 $grade = new Grades();
 $cur = $grade->single_grades($gradeId);
 
-	$subjid = $cur->SUBJ_ID;
+	$subjid = $cur->COURSE_ID;
 	$studentId = $cur->IDNO;
 	
 if (isset($_POST['savegrades'])){
 
-	if ($_POST['finalave']>=75 AND $_POST['finalave']<=100){
-		$remarks = "Passed";
-	}else{
+	if ($_POST['finalave']>=45 AND $_POST['finalave']<=49){
+		$remarks = "D";
+	}
+	elseif ($_POST['finalave']>=50 AND $_POST['finalave']<=54){
+		$remarks = "D+";
+	}
+	elseif ($_POST['finalave']>=55 AND $_POST['finalave']<=59){
+		$remarks = "C-";
+	}
+	elseif ($_POST['finalave']>=60 AND $_POST['finalave']<=64){
+		$remarks = "C";
+	}
+	elseif ($_POST['finalave']>=60 AND $_POST['finalave']<=64){
+		$remarks = "C";
+	}
+	elseif ($_POST['finalave']>=65 AND $_POST['finalave']<=69){
+		$remarks = "C+";
+	}
+	elseif ($_POST['finalave']>=70 AND $_POST['finalave']<=74){
+		$remarks = "B-";
+	}
+	elseif ($_POST['finalave']>=75 AND $_POST['finalave']<=79){
+		$remarks = "B";
+	}
+	elseif ($_POST['finalave']>=80 AND $_POST['finalave']<=84){
+		$remarks = "B+";
+	}
+	elseif ($_POST['finalave']>=85 AND $_POST['finalave']<=89){
+		$remarks = "A-";
+	}
+	elseif ($_POST['finalave']>=90 AND $_POST['finalave']<=100){
+		$remarks = "A";
+	}
+	else{
 		$remarks= "Failed";
 	}
 
@@ -26,7 +57,10 @@ if (isset($_POST['savegrades'])){
 
 		$grade = new Grades();
 		$grade->INST_ID 	= $cur->INST_ID;
-		$grade->PRE 		= $_POST['prelim'];
+		$grade->PLO1 		= $_POST['PLO1'];
+		$grade->PLO2 		= $_POST['PLO2'];
+		$grade->CO1 		= $_POST['CO1'];
+		$grade->CO2 		= $_POST['CO2'];
 		$grade->MID 		= $_POST['midterm'];
 		$grade->FIN 		= $_POST['final'];
 		$grade->FIN_AVE	  	= $_POST['finalave'];
@@ -37,8 +71,6 @@ if (isset($_POST['savegrades'])){
 	}
 
 ?>		
-		
-		 
 		        <form class="form-horizontal well span4" action="?classId=<?php echo $_GET['classId'];?>&gradeId=<?php echo $_GET['gradeId'];?>" method="POST">
 
 					<fieldset>
@@ -62,7 +94,7 @@ if (isset($_POST['savegrades'])){
 							<div class="form-group">
 				            <div class="col-md-8">
 				              <label class="col-md-4 control-label" for=
-				              "subjcode">Subject Code</label>
+				              "subjcode">Course Code</label>
 						<?php 
 							$singlesubject = new Subject();
 							$cur = $singlesubject->single_subject($subjid);
@@ -77,7 +109,7 @@ if (isset($_POST['savegrades'])){
 				          <div class="form-group">
 				            <div class="col-md-8">
 				              <label class="col-md-4 control-label" for=
-				              "subjdesc">Subject Description</label>
+				              "subjdesc">Course Description</label>
 
 				              <div class="col-md-8">
 				                 <input class="form-control input-sm" id="subjdesc" name="subjdesc" readonly placeholder=
@@ -92,10 +124,40 @@ if (isset($_POST['savegrades'])){
 				           <div class="form-group">
 				            <div class="col-md-8">
 				              <label class="col-md-4 control-label" for=
-				              "prelim">Prelim</label>
+				              "PLO1">PLO1</label>
 
 				              <div class="col-md-8">
-				                 <input class="form-control input-sm" id="prelim" name="prelim"   onkeyup="calculate()"  type="text" value="<?php echo (isset($cur)) ? $cur->PRE  : 'prelim' ;?>">
+				                 <input class="form-control input-sm" id="prelim" name="PLO1"   onkeyup="calculate()"  type="text" value="<?php echo (isset($cur)) ? $cur->PRE  : 'prelim' ;?>">
+				              </div>
+				            </div>
+				          </div>
+				           <div class="form-group">
+				            <div class="col-md-8">
+				              <label class="col-md-4 control-label" for=
+				              "PLO1">PLO2</label>
+
+				              <div class="col-md-8">
+				                 <input class="form-control input-sm" id="prelim" name="PLO2"   onkeyup="calculate()"  type="text" value="<?php echo (isset($cur)) ? $cur->PRE  : 'prelim' ;?>">
+				              </div>
+				            </div>
+				          </div>
+				           <div class="form-group">
+				            <div class="col-md-8">
+				              <label class="col-md-4 control-label" for=
+				              "PLO1">CO1</label>
+
+				              <div class="col-md-8">
+				                 <input class="form-control input-sm" id="prelim" name="CO1"   onkeyup="calculate()"  type="text" value="<?php echo (isset($cur)) ? $cur->PRE  : 'prelim' ;?>">
+				              </div>
+				            </div>
+				          </div>
+				           <div class="form-group">
+				            <div class="col-md-8">
+				              <label class="col-md-4 control-label" for=
+				              "PLO1">CO2</label>
+
+				              <div class="col-md-8">
+				                 <input class="form-control input-sm" id="prelim" name="CO2"   onkeyup="calculate()"  type="text" value="<?php echo (isset($cur)) ? $cur->PRE  : 'prelim' ;?>">
 				              </div>
 				            </div>
 				          </div>
@@ -141,7 +203,7 @@ if (isset($_POST['savegrades'])){
 
 									
 				</form>
-				</div><!--End of container-->
+				</div>
 			
 
 <?php include("footer.php") ?>
@@ -149,11 +211,14 @@ if (isset($_POST['savegrades'])){
 <script type="text/javascript" language="javascript">
  
  function calculate(){		 
-     var prelims = document.getElementById('prelim').value; 
+     var PLO1 = document.getElementById('PLO1').value; 
+     var PLO2 = document.getElementById('PLO2').value; 
+     var CO1 = document.getElementById('CO1').value; 
+     var CO2 = document.getElementById('CO2').value; 
    	 var midterms = document.getElementById('midterm').value; 
    	 var finals = document.getElementById('final').value;  
  	
-    var totalVal = parseInt(prelims) + parseInt(midterms) + parseInt(finals) ;
+    var totalVal = parseInt(PLO1) +parseInt(PLO2) +parseInt(CO1)+parseInt(CO2)+ parseInt(midterms) + parseInt(finals) ;
 	 document.getElementById('finalave').value = totalVal;
      document.getElementById('finalave').value = Math.round((parseInt(totalVal)/3));  
         }
